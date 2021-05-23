@@ -1,0 +1,33 @@
+{
+  "name": "@casoetan/nj-db",
+  "version": "0.0.1",
+  "description": "A simple interface for saving and retrieving data to and from a database",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "files": [
+    "lib/"
+  ],
+  "scripts": {
+    "test": "npm run test",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "prepublish": "npm run tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+github.com/casoetan/nj-db.git"
+  },
+  "keywords": [
+    "database",
+    "nice"
+  ],
+  "author": "Deji Soetan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/casoetan/nj-db/issues"
+  },
+  "homepage": "https://github.com/casoetan/nj-db#readme",
+  "dependencies": {
+    "typescript": "^4.2.4"
+  }
+}
