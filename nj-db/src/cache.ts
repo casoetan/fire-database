@@ -1,5 +1,11 @@
 import { ICacheData, ICacheObj, IDocumentOptions } from "./interface";
 
+/**
+ * DataCacheStore
+ * 
+ * Class to cache data in memory and save round trip of fetching from firestore
+ * Can dramatically improve the latency of your application
+ */
 class DataCacheStorage {
   cache: Record<string, ICacheObj<any>>;
   cacheMaxAge: number;
@@ -25,6 +31,13 @@ class DataCacheStorage {
     return false;
   }
 
+  /**
+   * Get data from cache if it exist or returns null
+   * 
+   * @param IDocumentOptions 
+   * @returns DocumentType
+   * @returns null
+   */
   getData<DocumentType>({
     collection,
     id,
@@ -47,6 +60,12 @@ class DataCacheStorage {
     return doc.data;
   }
 
+  /**
+   * Set data in cache
+   * 
+   * @param IDocumentOptions 
+   * @param DocumentType 
+   */
   setData<DocumentType>(
     { collection, id }: IDocumentOptions,
     data: DocumentType

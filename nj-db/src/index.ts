@@ -1,16 +1,21 @@
+const Firestore = require("@google-cloud/firestore");
+
 import DataCacheStorage from "./cache";
 import {
   IDatabaseOptions,
   ICollectionOptions,
   IDocumentOptions,
+  ICollectionFilters,
 } from "./interface";
-
-const Firestore = require("@google-cloud/firestore");
 
 /**
  * Database
  *
- * The database class
+ * Class for saving and querying firebase firestore
+ *
+ * @param project_id string Google Cloud Platform project ID
+ * @param cache_max_age string Cached data age threshold (default: 3600)
+ * @param cache_allocated_memory Maximum in-memory cache size, in megabytes (default: 64MB)
  */
 class Database {
   projectId: string;
@@ -38,16 +43,39 @@ class Database {
     return this.db.collection(collection);
   }
 
+  /**
+   * Write an object to the database
+   *
+   * Writes a document to the database, and to the in-memory cache.
+   *
+   * This method does not return anything.
+   *
+   * @param IDocumentOptions
+   * @param DocumentType
+   */
   async write<DocumentType>(
     { collection, id }: IDocumentOptions,
     document: DocumentType
   ) {
     const docRef = this.getCollectionRef(collection).doc(id);
-    await docRef.set(document);
+    await docRef.set(document, { merge: true });
 
     this.dataCache.setData({ collection, id }, document);
   }
 
+  /**
+   * Read an object form the database
+   *
+   * Retrieves a single document from the database, or,
+   * if applicable, from the in-memory cache.
+   *
+   * This method returns a single document, an object,
+   * whose type is to be inferred by the DataType generic.
+   * If the document does not exist, the method throws an error.
+   *
+   * @param IDocumentOptions
+   * @returns DocumentType
+   */
   async readOne<DocumentType>({
     collection,
     id,
@@ -60,20 +88,55 @@ class Database {
     const docRef = this.getCollectionRef(collection).doc(id);
     const liveDoc = await docRef.get();
 
-    this.dataCache.setData({ collection, id }, liveDoc.data());
+    const docData = liveDoc.data();
 
-    return { id: liveDoc.id, ...liveDoc.data() };
+    if (!docData) {
+      throw new Error(
+        `No document with this id: ${id} was found in this collection: ${collection}`
+      );
+    }
+
+    this.dataCache.setData({ collection, id }, docData);
+
+    return { id: liveDoc.id, ...docData };
   }
 
+  /**
+   * Read many from a collection
+   *
+   * Retrieves a set of documents from the database. Always queries the firebase store
+   *
+   * Entries are never the less stored in cache and individual objects retrieved
+   * from cache (if they exist using ReadOne)
+   *
+   * Filters only filter keys that are equal for now. May be extended later
+   * for other operations
+   *
+   * This method returns an array of documents,
+   * whose type is to be inferred by the DataType generic.
+   *
+   * @param ICollectionOptions
+   * @param ICollectionFilters
+   * @returns DocumentType[]
+   */
   async readMany<DocumentType>(
     { collection }: ICollectionOptions,
-    filters?: any
+    filters: ICollectionFilters = {}
   ): Promise<DocumentType[]> {
-    const snapshot = await this.getCollectionRef(collection).get();
+    let colRef = this.getCollectionRef(collection);
+
+    Object.keys(filters).forEach((filterKey) => {
+      colRef = colRef.where(filterKey, "==", filters[filterKey]);
+    });
+
+    const snapshot = await colRef.get();
 
     if (snapshot.empty) {
-      return [];
+      throw new Error(
+        `No result matches the collection: ${collection} and filter supplied`
+      );
     }
+
     let result: DocumentType[] = [];
     snapshot.forEach((snap: any) => {
       result.push({ id: snap.id, ...snap.data() } as DocumentType);

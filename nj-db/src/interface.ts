@@ -1,6 +1,6 @@
 /**
  * Database interface options
- * 
+ *
  * Options required to initialize the database object
  */
 export interface IDatabaseOptions {
@@ -10,25 +10,37 @@ export interface IDatabaseOptions {
 }
 
 /**
- * Firebase collection interface
+ * Database collection interface
  */
 export interface ICollectionOptions {
   collection: string;
 }
 
-
 /**
- * Firebase document interface
+ * Database document interface
  */
 export interface IDocumentOptions extends ICollectionOptions {
   id: string;
 }
 
-export interface ICacheData<T> {
-  entryTime: number
-  data: T
+/**
+ * Database collection filter interface
+ */
+export interface ICollectionFilters {
+  [name: string]: any;
 }
 
+/**
+ * Cache data object interface
+ */
+export interface ICacheData<T> {
+  entryTime: number;
+  data: T;
+}
+
+/**
+ * Cache data collection interface
+ */
 export interface ICacheObj<T> {
-  [id: string]: ICacheData<T>
+  [id: string]: ICacheData<T>;
 }
