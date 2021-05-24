@@ -14,7 +14,7 @@ class DataCacheStorage {
   private docHasExpired<DocumentType>(
     cache: ICacheData<DocumentType>
   ): boolean {
-    if (cache.entryTime + this.cacheMaxAge > Date.now()) {
+    if (cache.entryTime + this.cacheMaxAge < Date.now()) {
       return true;
     }
     return false;
@@ -32,7 +32,7 @@ class DataCacheStorage {
     if (Object.keys(this.cache).length < 1 || !this.cache[collection]) {
       return null;
     }
-
+    
     const doc = this.cache[collection][id];
 
     if (!doc) {

@@ -60,17 +60,26 @@ class Database {
     const docRef = this.getCollectionRef(collection).doc(id);
     const liveDoc = await docRef.get();
 
-    this.dataCache.setData({ collection, id }, liveDoc);
+    this.dataCache.setData({ collection, id }, liveDoc.data());
 
-    return liveDoc;
+    return { id: liveDoc.id, ...liveDoc.data() };
   }
 
   async readMany<DocumentType>(
     { collection }: ICollectionOptions,
-    filters: any
+    filters?: any
   ): Promise<DocumentType[]> {
-    const snapshot = this.getCollectionRef(collection).get();
-    return snapshot.map((snap: any) => snap.data() as DocumentType);
+    const snapshot = await this.getCollectionRef(collection).get();
+
+    if (snapshot.empty) {
+      return [];
+    }
+    let result: DocumentType[] = [];
+    snapshot.forEach((snap: any) => {
+      result.push({ id: snap.id, ...snap.data() } as DocumentType);
+      this.dataCache.setData({ collection, id: snap.id }, snap.data());
+    });
+    return result;
   }
 }
 
