@@ -10,24 +10,25 @@ export interface IDatabaseOptions {
 }
 
 /**
- * Database write method options
+ * Firebase collection interface
  */
-export interface IWriteOptions {
+export interface ICollectionOptions {
   collection: string;
+}
+
+
+/**
+ * Firebase document interface
+ */
+export interface IDocumentOptions extends ICollectionOptions {
   id: string;
 }
 
-/**
- * Database read one/retrieve method options
- */
-export interface IReadOptions {
-  collection: string;
-  id: string;
-};
+export interface ICacheData<T> {
+  entryTime: number
+  data: T
+}
 
-/**
- * Database read many/list method options
- */
-export interface IReadManyOptions {
-  collection: string;
+export interface ICacheObj<T> {
+  [id: string]: ICacheData<T>
 }
