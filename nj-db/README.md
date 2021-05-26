@@ -1,4 +1,4 @@
-# nj-db
+# [nj-db](https://www.npmjs.com/package/@casoetan/nj-db) 
 
 This NPM package provides a simple interface for saving and retrieving data to and from a database.
 
