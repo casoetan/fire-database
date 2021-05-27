@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nj-api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/usr/nj-db.json
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - ~/.gcloud/nj-db.json:/usr/nj-db.json

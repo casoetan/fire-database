@@ -118,3 +118,11 @@ dist
 
 # build directory
 lib
+
+# Terraforms
+*.plan
+*.tfstate
+tfvars
+.terraform
+tfplan*
+*.lock.hcl
