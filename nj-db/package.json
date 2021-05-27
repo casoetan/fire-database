@@ -1,6 +1,6 @@
 {
   "name": "@casoetan/nj-db",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple interface for saving and retrieving data to and from a database",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",

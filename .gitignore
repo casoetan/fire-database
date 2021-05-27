@@ -121,8 +121,10 @@ lib
 
 # Terraforms
 *.plan
-*.tfstate
+*.tfstate*
 tfvars
 .terraform
 tfplan*
 *.lock.hcl
+
+docker-compose.yml

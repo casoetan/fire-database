@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     container_name: nj-api
     restart: unless-stopped
-    env_file: .env
     environment:
+      - GCP_PROJECT_ID=123456
       - GOOGLE_APPLICATION_CREDENTIALS=/usr/nj-db.json
     ports:
       - "3000:3000"

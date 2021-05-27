@@ -21,7 +21,6 @@ router.get("/:collection/:id", async (req, res) => {
 });
 
 router.get("/:collection", async (req, res) => {
-  console.log(req.query);
   try {
     const result = await db.readMany(
       { collection: req.params.collection },

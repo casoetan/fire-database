@@ -1,3 +1,3 @@
 # Fire Database
 
-This NPM package provides a simple interface for saving and retrieving data to and from a firebase firestore database. It has a simple companion application that utilizes the package. 
+This repo contains an NPM package (nj-db) which provides a simple interface for querying and creating data in firebase firestore database. It als includes a simple companion nodejs application that exposes some apis and utilizes the package. 
